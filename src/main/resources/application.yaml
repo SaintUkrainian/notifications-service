@@ -1,0 +1,28 @@
+spring:
+  kafka:
+    topic: chat-notifications
+    consumer:
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: chat-app-group
+      auto-offset-reset: earliest
+    websocket:
+      topic-base-path: /chat-notifications
+  profiles:
+    default: dev
+server:
+  port: 8082
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  kafka:
+    bootstrap-servers: localhost:29092
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  kafka:
+    bootstrap-servers: broker:9092
