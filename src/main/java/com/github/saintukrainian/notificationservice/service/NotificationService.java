@@ -1,8 +1,10 @@
 package com.github.saintukrainian.notificationservice.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.saintukrainian.notificationservice.model.ChatMessage;
+import com.github.saintukrainian.notificationservice.model.MessagesSeenRequest;
 import com.github.saintukrainian.notificationservice.model.Notification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,5 +32,16 @@ public class NotificationService {
 
     simpMessagingTemplate.convertAndSend(NOTIFICATIONS_PATH + chatMessage.getChatId(),
         notification);
+  }
+
+  @KafkaListener(groupId = "${spring.kafka.consumer.group-id}", topics = "messages-seen")
+  public void updateNewNotificationsCount(String request) throws JsonProcessingException {
+    MessagesSeenRequest messagesSeenRequest = mapper.readValue(request,
+        new TypeReference<>() {
+        });
+    log.info("Sending messages seen event for chat id: {}", messagesSeenRequest.getChatId());
+    simpMessagingTemplate.convertAndSend(
+        NOTIFICATIONS_PATH + messagesSeenRequest.getChatId() + "/messages-seen/"
+            + messagesSeenRequest.getUserId(), true);
   }
 }
