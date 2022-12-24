@@ -30,6 +30,7 @@ public class Notification {
     return Notification.builder()
         .chatId(chatMessage.getChatId())
         .latestMessage("*deleted*")
+        .unseenMessagesCount(chatMessage.getUnseenMessagesCount())
         .build();
   }
 }
