@@ -14,7 +14,6 @@ public class ChatMessage {
 
   private Long chatId;
   private String value;
-  private Boolean isDeleted;
   private BigInteger unseenMessagesCount;
   private UserDto fromUser;
 }

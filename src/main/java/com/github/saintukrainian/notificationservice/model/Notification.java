@@ -18,19 +18,13 @@ public class Notification {
   private Long fromUserId;
 
   public static Notification fromChatMessage(ChatMessage chatMessage) {
+    UserDto fromUser = chatMessage.getFromUser();
     return Notification.builder()
         .chatId(chatMessage.getChatId())
         .latestMessage(chatMessage.getValue())
         .unseenMessagesCount(chatMessage.getUnseenMessagesCount())
-        .fromUserId(chatMessage.getFromUser().getUserId())
+        .fromUserId(fromUser != null ? fromUser.getUserId() : null)
         .build();
   }
 
-  public static Notification fromDeletedChatMessage(ChatMessage chatMessage) {
-    return Notification.builder()
-        .chatId(chatMessage.getChatId())
-        .latestMessage("*deleted*")
-        .unseenMessagesCount(chatMessage.getUnseenMessagesCount())
-        .build();
-  }
 }

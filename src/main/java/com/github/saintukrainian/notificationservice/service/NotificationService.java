@@ -26,10 +26,9 @@ public class NotificationService {
     ChatMessage chatMessage = mapper.readValue(message, ChatMessage.class);
     log.info("Received new message: {}", chatMessage);
 
-    Notification notification = chatMessage.getIsDeleted()
-        ? Notification.fromDeletedChatMessage(chatMessage)
-        : Notification.fromChatMessage(chatMessage);
+    Notification notification = Notification.fromChatMessage(chatMessage);
 
+    log.info("Sending notification: {}", notification);
     simpMessagingTemplate.convertAndSend(NOTIFICATIONS_PATH + chatMessage.getChatId(),
         notification);
   }
